@@ -121,12 +121,32 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         ........................
         ........................
         ........................
+        `,img`
+        . . . f f f f f f f f f . . . 
+        . . f f a a a a a a a f f . . 
+        . . f a a a a a a a a a f . . 
+        . . f a a a a a a a a a f . . 
+        . . f a a a a a a f f a f . . 
+        . . f a a d a a f 1 8 d f . . 
+        . . f a a d a a d 1 8 d f . . 
+        . . f a a d a a d d d f f . . 
+        . . f a a 9 a 7 7 7 f f . . . 
+        . . f a a 6 6 9 7 7 f . . . . 
+        . . f f a 6 6 9 9 9 f . . . . 
+        . . . f f 6 6 9 9 9 f . . . . 
+        . . . . f 9 9 9 9 9 f . . . . 
+        . . . . f f f f f f f . . . . 
+        . . . . . f e e e f . . . . . 
+        . . . . . . f f f . . . . . . 
         `],
     100,
     false
     )
     pause(100)
 })
+function Level () {
+	
+}
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
     sprites.destroy(projectile)
 })
@@ -255,22 +275,23 @@ scene.setBackgroundImage(img`
     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
     `)
 mySprite = sprites.create(img`
-    . . . . . . f f f f . . . . . . 
-    . . . . f f f 2 2 f f f . . . . 
-    . . . f f f 2 2 2 2 f f f . . . 
-    . . f f f e e e e e e f f f . . 
-    . . f f e 2 2 2 2 2 2 e e f . . 
-    . . f e 2 f f f f f f 2 e f . . 
-    . . f f f f e e e e f f f f . . 
-    . f f e f b f 4 4 f b f e f f . 
-    . f e e 4 1 f d d f 1 4 e e f . 
-    . . f e e d d d d d d e e f . . 
-    . . . f e e 4 4 4 4 e e f . . . 
-    . . e 4 f 2 2 2 2 2 2 f 4 e . . 
-    . . 4 d f 2 2 2 2 2 2 f d 4 . . 
-    . . 4 4 f 4 4 5 5 4 4 f 4 4 . . 
-    . . . . . f f f f f f . . . . . 
-    . . . . . f f . . f f . . . . . 
+    . . . f f f f f f f f f . . . 
+    . . f f a a a a a a a f f . . 
+    . . f a a a a a a a a a f . . 
+    . . f a a a a a a a a a f . . 
+    . . f a a a a a a f f a f . . 
+    . . f a a d a a f 1 8 d f . . 
+    . . f a a d a a d 1 8 d f . . 
+    . . f a a d a a d d d f f . . 
+    . . f a a 9 a 7 7 7 f f . . . 
+    . . f a a 6 6 9 7 7 f . . . . 
+    . . f f a 6 6 9 9 9 f . . . . 
+    . . . f f 6 6 9 9 9 f . . . . 
+    . . . . f 9 9 9 9 9 f . . . . 
+    . . . . f f f f f f f . . . . 
+    . . . . . f e e e f . . . . . 
+    . . . . . . f f f . . . . . . 
     `, SpriteKind.Player)
 mySprite.y = 75
+mySprite.ay = 500
 controller.moveSprite(mySprite)
