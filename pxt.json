@@ -1,5 +1,5 @@
 {
-    "name": "Test🤪",
+    "name": "Prya's Escape Plan",
     "description": "",
     "dependencies": {
         "device": "*",
@@ -9,7 +9,10 @@
         "main.blocks",
         "main.ts",
         "README.md",
-        "assets.json"
+        "assets.json",
+        "tilemap.g.jres",
+        "tilemap.g.ts",
+        "main.py"
     ],
     "testFiles": [
         "test.ts"
