@@ -1,3 +1,6 @@
+namespace SpriteKind {
+    export const Boss = SpriteKind.create()
+}
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     projectile = sprites.createProjectileFromSprite(img`
         . . . . . . . . . . . . . . . . 
@@ -16,9 +19,7 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
-        `, Player1, 120, 0)
-    pause(100)
-    sprites.destroy(projectile)
+        `, Player1, 150, 0)
     animation.runImageAnimation(
     Player1,
     [img`
@@ -150,7 +151,13 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     100,
     false
     )
+    pause(500)
+    sprites.destroy(projectile)
     pause(100)
+})
+sprites.onOverlap(SpriteKind.Boss, SpriteKind.Player, function (sprite, otherSprite) {
+    info.changeLifeBy(-2)
+    pause(3000)
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (Player1.isHittingTile(CollisionDirection.Bottom)) {
@@ -160,6 +167,14 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile4`, function (sprite, location) {
     CurrentLevel += 1
     buildLevel()
+})
+function Bossbar () {
+    statusbar = statusbars.create(20, 4, StatusBarKind.Health)
+    statusbar.value = 100
+    statusbar.attachToSprite(Boss2)
+}
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Boss, function (sprite, otherSprite) {
+    statusbar.value += -1
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
@@ -210,8 +225,13 @@ controller.left.onEvent(ControllerButtonEvent.Released, function () {
     animation.stopAnimation(animation.AnimationTypes.All, Player1)
 })
 function buildLevel () {
+    sprites.destroy(Enemies)
     Level()
 }
+statusbars.onZero(StatusBarKind.Health, function (status) {
+    CurrentLevel += 1
+    Level()
+})
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
     Player1,
@@ -262,7 +282,30 @@ function Level () {
     if (CurrentLevel == 0) {
         tiles.setCurrentTilemap(tilemap`level2`)
     } else if (CurrentLevel == 1) {
+        info.setLife(5)
+        game.showLongText("Oh nein! Lavor hat sie entdeckt. Sie muss ihn besiegen, damit sie nach Hause kann. ", DialogLayout.Bottom)
         tiles.placeOnTile(Player1, tiles.getTileLocation(3, 9))
+        Boss2 = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . 6 6 6 6 6 . . . . . . 
+            . . . . 6 6 6 6 6 6 6 . . . . . 
+            . . . . 6 f 6 6 6 f 6 . . . . . 
+            . . . . 6 4 f 6 f 4 6 . . . . . 
+            . . . . 6 4 4 4 4 4 6 . . . . . 
+            . . . . 6 1 1 2 1 1 6 . . . . . 
+            . . . . 1 1 1 5 1 1 1 . . . . . 
+            . . 2 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 8 2 2 2 2 2 2 2 8 2 . . . 
+            . . 2 8 2 2 2 2 2 2 2 8 2 . . . 
+            . . f 8 2 2 2 2 2 2 2 8 f . . . 
+            . . . 8 8 f f 8 f f 8 8 . . . . 
+            . . . 8 8 f . . . f 8 8 . . . . 
+            . . . . . f . . . f . . . . . . 
+            . . . . 5 5 . . . 5 5 . . . . . 
+            `, SpriteKind.Boss)
+        scaling.scaleByPixels(Boss2, 30, ScaleDirection.Uniformly, ScaleAnchor.Middle)
+        Bossbar()
+        Boss2.follow(Player1, 20)
         tiles.setCurrentTilemap(tilemap`level6`)
     } else if (CurrentLevel == 2) {
         game.gameOver(true)
@@ -275,6 +318,8 @@ info.onLifeZero(function () {
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
     sprites.destroy(Enemies)
 })
+let Boss2: Sprite = null
+let statusbar: StatusBarSprite = null
 let projectile: Sprite = null
 let Enemies: Sprite = null
 let Player1: Sprite = null
@@ -403,8 +448,8 @@ scene.setBackgroundImage(img`
     `)
 CurrentLevel = 0
 Level()
+game.showLongText("Prya wurde entführt und muss entkommen! Doch ein Helfer von Lavor bewacht und verfolgt sie.", DialogLayout.Full)
 game.showLongText("Prya's Escape Plan", DialogLayout.Bottom)
-game.showLongText("rechts/links zum bewegen und hoch zum springen", DialogLayout.Bottom)
 Player1 = sprites.create(img`
     . . . . . . f f f f f f . . . . 
     . . . . f f a a a a a a f . . . 
@@ -446,7 +491,6 @@ Enemies = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
     `, SpriteKind.Enemy)
-tiles.placeOnTile(Enemies, tiles.getTileLocation(53, 8))
 Enemies.follow(Player1, 50)
 forever(function () {
     scroller.scrollBackgroundWithCamera(scroller.CameraScrollMode.OnlyHorizontal)
